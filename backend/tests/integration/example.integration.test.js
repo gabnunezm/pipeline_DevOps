@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('../server'); // Asegúrate de exportar 'app' en server.js para pruebas
+const app = require('../../server'); // <-- ruta ajustada
 
 describe('Integración API /api/saludo', () => {
   it('debe retornar saludo real desde el servidor', async () => {
