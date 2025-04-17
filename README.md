@@ -3,7 +3,9 @@
 Vladimir Mota 2019-7507
 
 Gabriel Nuñez Medina 2023-1871
+
 Oderlin Sanchez Santana 2023-1339
+
 Diego Gonzalez 2023-1369
 
 **Aplicación Web Simple**
