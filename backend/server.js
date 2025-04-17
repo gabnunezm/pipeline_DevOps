@@ -7,20 +7,14 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Logger con Winston
+// Logger
 const logger = winston.createLogger({
   level: 'info',
   format: winston.format.json(),
   transports: [new winston.transports.Console()],
 });
+app.use((req, res, next) => { logger.info(`${req.method} ${req.url}`); next(); });
 
-// Middleware de logging
-app.use((req, res, next) => {
-  logger.info(`${req.method} ${req.url}`);
-  next();
-});
-
-// Conexión a la base de datos
 async function connectDB() {
   try {
     const conn = await mysql.createConnection({
@@ -29,27 +23,20 @@ async function connectDB() {
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
     });
-    logger.info('Conexión a la base de datos establecida');
+    logger.info('DB conectada');
     return conn;
   } catch (err) {
-    logger.error('Error conectando a la base de datos', err);
+    logger.error('Error DB', err);
   }
 }
 
-// Endpoints
-app.get('/api/saludo', (req, res) => {
-  res.json({ mensaje: 'Hola desde el backend!' });
-});
+app.get('/api/saludo', (req, res) => res.json({ mensaje: 'Hola desde el backend!' }));
+app.get('/health', (req, res) => res.status(200).send('OK'));
 
-app.get('/health', (req, res) => {
-  res.status(200).send('OK');
-});
-
-// Solo arrancar el server si se ejecuta directamente
 if (require.main === module) {
   app.listen(port, async () => {
     await connectDB();
-    logger.info(`Servidor corriendo en http://localhost:${port}`);
+    logger.info(`Servidor en http://localhost:${port}`);
   });
 }
 
